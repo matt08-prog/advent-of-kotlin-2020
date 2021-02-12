@@ -1,0 +1,97 @@
+import java.io.File
+import java.lang.Double.parseDouble
+import kotlin.math.abs
+
+var list:ArrayList<String> = arrayListOf()
+
+fun readFileLineByLineUsingForEachLine(fileName: String) {
+    File(fileName).forEachLine { list.add(it.toString()) }
+}
+fun main(args: Array<String>) {
+    readFileLineByLineUsingForEachLine("src/input.txt")
+    println("(${ferry.ew}, ${ferry.ns})   &&&   (${ferry.bEW}, ${ferry.bNS})      dir: ${ferry.angle}")
+    list.forEach {
+        if (it[0] == 'R' || it[0] == 'L')
+            ferry.rotate(it[0], it.substring(1, it.length).toInt())
+        else
+            ferry.Move(it[0], it.substring(1, it.length).toInt())
+        println("(${ferry.ew}, ${ferry.ns})   &&&   (${ferry.relativebEW}, ${ferry.relativebNS})      dir: ${ferry.angle}                     -> $it")
+    }
+    println("answer: ${abs(ferry.ew) + abs(ferry.ns)}")
+}
+
+object ferry {
+    var bEW = 10
+    var bNS = 1
+    var relativebEW = bEW
+    var relativebNS = bNS
+
+    var ew = 0
+        set(value) {
+            bEW += value - field
+            field = value
+        }
+    var ns = 0
+        set(value) {
+            bNS += value - field
+            field = value
+        }
+    var angle = 1
+
+
+    open fun Move (Dir: Char, Dist: Int){
+        when(Dir) {
+            'N' -> relativebNS += Dist
+            'S' -> relativebNS -= Dist
+            'E' -> relativebEW += Dist
+            'W' -> relativebEW -= Dist
+            'F' -> {
+                ns += relativebNS * Dist
+                ew += relativebEW * Dist
+            }
+        }
+    }
+
+    open fun rotate (Dir: Char, Angle: Int){
+        var a = angle
+        if (Dir == 'R') {
+            angle += Angle / 90
+        }
+        else {
+            angle -= Angle / 90
+        }
+
+        if (a < angle) {
+            a++
+            while (a <= angle) {
+                println("$a clockwise")
+                val temp = relativebEW
+                relativebEW = relativebNS
+                relativebNS = temp
+                relativebNS = 0 - relativebNS
+                a++
+            }
+        }
+        else {
+            a--
+            while (a >= angle) {
+                println("$a counter clockwise was ($relativebEW, $relativebNS)")
+                val temp = relativebEW
+                relativebEW = relativebNS
+                relativebNS = temp
+                relativebEW = 0 - relativebEW
+                a--
+            }
+        }
+
+
+        if (angle > 3) {
+            angle -= 4
+        }
+        else if (angle < 0){
+            angle += 4
+        }
+        println("angle is now $angle")
+    }
+}
+// answer is 23960

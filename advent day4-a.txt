@@ -1,0 +1,65 @@
+import java.io.File
+
+var list:ArrayList<String> = arrayListOf()
+val tests:ArrayList<String> = arrayListOf("byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid")
+var newList = mutableListOf<String>("")
+
+fun readFileLineByLineUsingForEachLine(fileName: String)
+        = File(fileName).forEachLine { list.add(it.toString()) }
+
+fun main(args: Array<String>) {
+    readFileLineByLineUsingForEachLine("src/input.txt")
+    var index = 0
+    var line = 0
+
+    while (line < list.size) {
+        //println(list[line])
+
+        if (list[line] == "") {
+            //println(newList[index])
+            index++
+            newList.add("")
+        }
+        else
+        {
+            newList[index] = "${newList[index]} ${list[line]}"
+        }
+        line++
+    }
+
+    for (new in newList)
+    {
+        println(new)
+    }
+    //println(list[line-1])
+
+    println(calculateCorrect())
+
+//5007658656
+}
+
+
+fun calculateCorrect(): Long {
+    var correct: Long = 0
+    var i = 0
+    var pass = 0
+
+    while (i < newList.size)
+    {
+        for(test in tests)
+        {
+            if(newList[i].indexOf(test) > -1)
+            {
+                pass++
+            }
+        }
+        if (pass == 7)
+        {
+            correct++
+        }
+        pass = 0
+        i++
+    }
+
+    return correct
+}

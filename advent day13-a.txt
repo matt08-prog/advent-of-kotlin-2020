@@ -1,0 +1,34 @@
+import java.io.File
+
+var file = arrayListOf<String>()
+var IDs:ArrayList<Int> = arrayListOf()
+var min: Int = 0
+
+fun readFileLineByLineUsingForEachLine(fileName: String) {
+    File(fileName).forEachLine { file.add(it) }
+    min = file[0].toInt()
+    file.removeFirst()
+    file[0] = file[0].replace(",x","")
+    val newFile = file[0].split(",")
+    newFile.forEach{IDs.add(it.toInt())}
+    IDs.sort()
+    println(min)
+    println(IDs)
+}
+
+fun main(args: Array<String>) {
+    readFileLineByLineUsingForEachLine("src/input.txt")
+
+    var curTime = min
+    loop@ while (true) {
+        for(j in 0 until IDs.size) {
+            if (curTime % IDs[j]== 0) {
+                println("answer: ${(curTime - min) * IDs[j]}")
+                break@loop
+            }
+        }
+        curTime++
+    }
+}
+
+// 246 is correct

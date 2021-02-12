@@ -1,0 +1,136 @@
+import java.io.File
+import java.lang.Double.parseDouble
+
+var list:MutableList<String> = mutableListOf()
+var newList:MutableList<String> = mutableListOf()
+var related = 0
+val width = 10
+var row = 0
+var rows = 10
+var column = 0
+var columns = 10
+var br = -1
+var er = 1
+var bc = -1
+var ec = 1
+var iterations = 0
+
+fun readFileLineByLineUsingForEachLine(fileName: String) {
+    File(fileName).forEachLine { list.add(it.toString()); newList.add(it.toString()) }
+}
+fun main(args: Array<String>) {
+    readFileLineByLineUsingForEachLine("src/input.txt")
+
+    rows = list.size
+    columns = list[0].length
+
+    println("$rows x $columns")
+
+    list.forEach { println(it) }
+    while (true) {
+        list.forEach {
+            it.forEach { character ->
+                if (character == 'L') {
+                    CheckNeigbors('L', '#')
+                }
+                else if (character == '#')
+                {
+                    CheckNeigbors('#', '#')
+                }
+                column++
+            }
+            column = 0
+            row++
+        }
+        if(list == newList)
+        {
+            newList.forEach { println(it) }
+            var counter = 0
+            newList.forEach {
+                it.forEach {
+                    if(it=='#')
+                        counter++
+                }
+            }
+            println("Answer: $counter")
+            break
+        }
+        list = mutableListOf()
+
+        newList.forEach { list.add(it) }
+        println()
+        list.forEach { println(it) }
+        println(list[9][1])
+        iterations++
+        row = 0
+        column = 0
+    }
+}
+
+fun CheckNeigbors(selected: Char, search: Char) { // is only adding the very last element that you search for, which is goind to be near the bottom right. I need 9 lists, add the elements that are in that line, and then get the last element in each of those lists to determine eligibility.
+    related = 0
+    //println("                                    $selected at ($column, $row)")
+    var notSearch = '.'
+    if (search == '#') {
+        notSearch = 'L'
+    } else {
+        notSearch = '#'
+    }
+    var curRow = row
+    var curCol = column
+
+    var points: Array<Pair<Int, Int>> = arrayOf(
+        Pair(-1, -1),
+        Pair(0, -1),
+        Pair(1, -1),
+        Pair(-1, 0),
+        Pair(1, 0),
+        Pair(-1, 1),
+        Pair(0, 1),
+        Pair(1, 1)
+    )
+    var directions: MutableList<Pair<Int?, Int?>?> = MutableList(8) { null }
+
+    //println(directions)
+    points.forEachIndexed { index, it ->
+        while (true) {
+            curCol += it.first
+            curRow += it.second
+            if (!(curCol >= 0 && curRow >= 0 && curCol < columns && curRow < rows)) {
+                //println("${curCol - it.first},${curRow - it.second}                 $index")
+                break
+            }
+            //newList[curRow] = newList[curRow].replaceRange(curCol..curCol, "Q")
+
+            if (list[curRow][curCol] == search) {
+                directions[index] = Pair(curRow, curCol)
+               // println("$it: ($curCol, $curRow)                   found search")
+            } /*else if (list[curRow][curCol] == notSearch && index < 4) {
+                directions[index] = null
+
+               // println("$it: ($curCol, $curRow)                   not search above")
+            }
+            */
+            else if (list[curRow][curCol] == notSearch && directions[index] == null) {
+                //println("$it: ($curCol, $curRow)                   not search bellow")
+                break
+            }
+
+        }
+        curRow = row
+        curCol = column
+
+    }
+    //println(directions)
+    directions.forEach {
+        if (it != null) {
+            related++
+        }
+    }
+    if (selected == 'L' && related == 0) {
+        newList[row] = newList[row].replaceRange(column..column, "#")
+    } else if (selected == '#' && related >= 5) {
+        newList[row] = newList[row].replaceRange(column..column, "L")
+    }
+    println("$column, $row had $directions")
+}

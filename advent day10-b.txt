@@ -1,0 +1,25 @@
+import java.io.File
+import java.lang.Double.parseDouble
+
+var list:ArrayList<Long> = arrayListOf()
+fun readFileLineByLineUsingForEachLine(fileName: String) {
+    File(fileName).forEachLine { list.add(it.toLong()) }
+}
+fun main(args: Array<String>) {
+    readFileLineByLineUsingForEachLine("src/input.txt")
+    var input = list.plus(0).plus(list.maxOrNull()!! + 3).sorted()
+    var paths:MutableList<Long> = mutableListOf<Long>(1).plus(MutableList(input.last().toInt()) {0}) as MutableList<Long>
+
+    for (i in 0..(input.last()))
+    {
+        for(j in 1..3)
+        {
+            if(input.indexOf(i - j) > -1)
+            {
+                paths[i.toInt()] += paths[(i - j).toInt()]
+                println(paths)
+            }
+        }
+    }
+    println(paths.last())
+}

@@ -1,0 +1,59 @@
+import java.io.File
+import java.lang.Double.parseDouble
+
+var people: ArrayList<String> = arrayListOf()
+var groups: ArrayList<ArrayList<String>> = arrayListOf(arrayListOf())
+
+fun readFileLineByLineUsingForEachLine(fileName: String) {
+
+    File(fileName).forEachLine {
+        if(it.toString() == "")
+        {
+            groups.add(people)
+            people = arrayListOf()
+        }
+        else {
+            people.add(it)
+        }
+    }
+    groups.add(people)
+}
+
+fun main(args: Array<String>) {
+    readFileLineByLineUsingForEachLine("src/input.txt")
+    var total: Long = 0
+    groups.forEach{
+        total += calculateCorrect(it)
+    }
+    println(total)
+}
+
+
+fun calculateCorrect(input: ArrayList<String>): Long {
+    var sum: Long = 0
+    var sameChars: ArrayList<Char> = arrayListOf()
+    var pass: Long = 0
+
+    for(i in 0..input.size-1) {
+        for(j in 0..input[i].length-1) {
+                for(k in 0..input.size-1) {
+                    if (k != i && input[k].indexOf(input[i][j]) > -1) {
+                        pass++
+                    }
+                }
+            if(pass == input.size.toLong()-1 && sameChars.indexOf(input[i][j]) <= -1)
+            {
+                sum += 1
+                sameChars.add(input[i][j])
+            }
+            pass = 0
+        }
+    }
+
+    if(input.size == 1)
+    {
+        sum = input[0].length.toLong()
+    }
+
+    return sum
+}

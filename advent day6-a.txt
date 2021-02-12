@@ -1,0 +1,45 @@
+import java.io.File
+import java.lang.Double.parseDouble
+
+var list:ArrayList<String> = arrayListOf("")
+var sum: Long = 0
+
+
+fun readFileLineByLineUsingForEachLine(fileName: String) {
+    var index = 0
+    
+    File(fileName).forEachLine {
+        if(it.toString() == "")
+        {
+            index++
+            list.add(it.toString())
+        }
+        else {
+            list[index] = "${list[index]}${it.toString()}"
+        }
+    }
+}
+
+fun main(args: Array<String>) {
+    readFileLineByLineUsingForEachLine("src/input.txt")
+    list.forEach{
+        println("$it  -->  ${calculateCorrect(it)}")
+    }
+    println(sum)
+}
+
+
+fun calculateCorrect(input: String): Long {
+    var chars:ArrayList<Char> = arrayListOf()
+    for(i in 0..input.length-1)
+    {
+        if (chars.indexOf(input[i]) <= -1)
+        {
+            chars.add(input[i])
+        }
+    }
+
+    sum += chars.size.toLong()
+
+    return chars.size.toLong()
+}

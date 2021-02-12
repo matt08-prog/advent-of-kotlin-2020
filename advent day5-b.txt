@@ -1,0 +1,86 @@
+import java.io.File
+import java.lang.Double.parseDouble
+import kotlin.math.absoluteValue
+import kotlin.math.ceil
+import kotlin.math.floor
+
+var list:ArrayList<String> = arrayListOf()
+var newList:ArrayList<Int> = arrayListOf()
+
+fun readFileLineByLineUsingForEachLine(fileName: String) {
+    File(fileName).forEachLine { list.add(it.toString()) }
+}
+fun main(args: Array<String>) {
+    readFileLineByLineUsingForEachLine("src/input.txt")
+
+    var max = 0
+    for (item in list)
+    {
+        //println("$item  -->  ${calculateCorrect(item)}")
+        newList.add(calculateCorrect(item).toInt())
+        if(calculateCorrect(item) > max)
+        {
+            max = calculateCorrect(item)
+        }
+    }
+    //println(max)
+
+    var finalList = newList.sortedBy { it.absoluteValue }
+// 0 - 868
+    for (spot in finalList)
+    {
+        val index = finalList.indexOf(spot)
+        if (index + 1 < finalList.size && index - 1 >=0)
+        {
+            if (finalList[index + 1] != spot + 1 || finalList[index - 1] != spot - 1)
+            {
+                println(spot + 1)
+                break
+            }
+        }
+    }
+}
+
+
+fun calculateCorrect(input: String): Int{
+    var row = 127
+    var col = 8
+
+    var bottomFRow: Float = 0.0f
+    var topFRow: Float = 127.0f
+
+    for (i in 0..6)
+    {
+        if(input[i] == 'F')
+        {
+            topFRow -= (topFRow - bottomFRow + 1) / 2
+            row = topFRow.toInt()
+        }
+        else
+        {
+            bottomFRow += (topFRow - bottomFRow + 1) / 2
+            row = bottomFRow.toInt()
+        }
+    }
+    //println(row)
+
+    var bottomFCol: Float = 0.0f
+    var topFCol: Float = 7.0f
+
+    for (i in 7..9)
+    {
+        if(input[i] == 'L')
+        {
+            topFCol -= (topFCol - bottomFCol + 1) / 2
+            col = topFCol.toInt()
+        }
+        else
+        {
+            bottomFCol += (topFCol - bottomFCol + 1) / 2
+            col = bottomFCol.toInt()
+        }
+    }
+
+    //println(col)
+    return row * 8 + col
+}

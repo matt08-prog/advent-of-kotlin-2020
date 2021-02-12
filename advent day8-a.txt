@@ -1,0 +1,84 @@
+import java.io.File
+import java.lang.Double.parseDouble
+
+var alreadyChecked:ArrayList<Int> = arrayListOf()
+var alreadyChanged:ArrayList<Int> = arrayListOf()
+var changedIndex = 0
+var list:MutableList<String> = ArrayList()
+
+var acc = 0
+var index = 0
+var looping = false
+var correct = false
+var once = true
+var cont = true
+
+fun readFileLineByLineUsingForEachLine(fileName: String) {
+    File(fileName).forEachLine { list.add(it.toString()) }
+}
+fun main(args: Array<String>) {
+
+    readFileLineByLineUsingForEachLine("src/input.txt")
+
+
+//    list.forEach {
+//        println(it)
+//    }
+
+    println("\n")
+
+    while(correct == false) {
+        val instruction = runLine(list[index])
+        //println(instruction)
+    }
+}
+
+
+fun runLine(instruction: String) {
+
+    if(alreadyChecked.indexOf(index) > -1)
+    {
+        correct = true
+        println("acc = $acc")
+    }
+
+    alreadyChecked.add(index)
+    when (instruction.substring(0,3))
+    {
+        "nop" -> {
+            index++
+            return
+        }
+        "acc" -> {
+            if(instruction.substring(4,5) == "+")
+            {
+                acc += instruction.substring(5,instruction.length).toInt()
+            }
+            else
+            {
+                acc -= instruction.substring(5,instruction.length).toInt()
+            }
+            index++
+        }
+        "jmp" -> {
+            if(instruction.substring(4,5) == "+")
+            {
+                index += instruction.substring(5,instruction.length).toInt()
+            }
+            else
+            {
+                index -= instruction.substring(5,instruction.length).toInt()
+            }
+
+        }
+    }
+    if (correct)
+    {
+//        list.forEach {
+//            println(it)
+//        }
+        return
+    }
+    //println("acc = $acc")
+}
+

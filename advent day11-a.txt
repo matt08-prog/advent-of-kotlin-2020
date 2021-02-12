@@ -1,0 +1,101 @@
+import java.io.File
+import java.lang.Double.parseDouble
+
+var list:MutableList<String> = mutableListOf()
+var newList:MutableList<String> = mutableListOf()
+var related = 0
+val width = 10
+var row = 0
+var rows = 10
+var column = 0
+var columns = 10
+var br = -1
+var er = 1
+var bc = -1
+var ec = 1
+var iterations = 0
+
+fun readFileLineByLineUsingForEachLine(fileName: String) {
+    File(fileName).forEachLine { list.add(it.toString()); newList.add(it.toString()) }
+}
+fun main(args: Array<String>) {
+    readFileLineByLineUsingForEachLine("src/input.txt")
+    list.forEach { println(it) }
+    while (true) {
+        list.forEach {
+            it.forEach { character ->
+                if (character == 'L') {
+                    CheckNeigbors('L', '#')
+                }
+                else if (character == '#')
+                {
+                    CheckNeigbors('#', '#')
+                }
+                column++
+            }
+            column = 0
+            row++
+        }
+        if(list == newList)
+        {
+            newList.forEach { println(it) }
+            var counter = 0
+            newList.forEach {
+                it.forEach {
+                    if(it=='#')
+                        counter++
+                }
+            }
+            println("Answer: $counter")
+            break
+        }
+        list = mutableListOf()
+
+        newList.forEach { list.add(it) }
+        println()
+        list.forEach { println(it) }
+        println()
+        iterations++
+        row = 0
+        column = 0
+//        if (iterations > 1)
+//        {
+//            break
+//        }
+    }
+}
+
+fun CheckNeigbors(selected: Char, search: Char) {
+    related = 0
+    //println("$selected at ($row, $column)")
+    if (row == 0) {
+        br = 0
+    } else if (row == rows - 1) {
+        er = 0
+    }
+    if (column == 0) {
+        bc = 0
+    } else if (column == columns - 1) {
+        ec = 0
+    }
+    for (r in br..er step 1) {
+        for (c in bc..ec step 1) {
+            //println("Testing (${row + r}, ${column + c})")
+            if (list[row + r][column + c] == search && !(r == 0 && c == 0)) {
+                //println("found at (${row + r}, ${column + c})")
+                related++
+            }
+        }
+    }
+    if (selected == 'L' && related == 0) {
+        newList[row] = newList[row].replaceRange(column..column, "#")
+    }
+    else if(selected == '#' && related >= 4) {
+        newList[row] = newList[row].replaceRange(column..column, "L")
+        println(related)
+    }
+    br = -1
+    er = 1
+    bc = -1
+    ec = 1
+}

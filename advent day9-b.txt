@@ -1,0 +1,60 @@
+import java.io.File
+import java.lang.Double.parseDouble
+
+var list:ArrayList<Long> = arrayListOf()
+var index = 0
+var contigous = 1
+val goal = 26796446
+
+fun readFileLineByLineUsingForEachLine(fileName: String) {
+    File(fileName).forEachLine { list.add(it.toLong()) }
+}
+fun main(args: Array<String>) {
+    readFileLineByLineUsingForEachLine("src/input.txt")
+
+
+    while(!calculateCorrect()) {
+        contigous++
+    }
+}
+
+
+fun calculateCorrect(): Boolean {
+    var found = false
+    var total: Long = 0
+    for (i in 0..(list.size - 1 - contigous)) {
+        var lowest: Long = list[i]
+        var highest: Long = list[i]
+
+        for(j in 0..contigous)
+        {
+            total += list[i + j]
+            if(list[i + j] < lowest)
+            {
+                lowest = list[i+j]
+            }
+            if(list[i + j] > highest)
+            {
+                highest = list[i+j]
+            }
+        }
+        if(total == goal.toLong())
+        {
+            found = true
+            println("there are $contigous numbers in a row")
+            println("the correct answer is from ${lowest} to ${highest}")
+            println("the encryption weakness in my XMAS-encrypted list of numbers is ${lowest + highest}")
+            return true
+        }
+        else
+        {
+            println(total)
+            total = 0
+        }
+    }
+    return false
+}
+//26796446
+
+
+//3184168 is too low

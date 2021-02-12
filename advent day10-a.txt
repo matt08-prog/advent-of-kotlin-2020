@@ -1,0 +1,53 @@
+import java.io.File
+import java.lang.Double.parseDouble
+
+var list:ArrayList<Int> = arrayListOf()
+var highest = 0
+var ones = 0
+var threes = 0
+
+
+fun readFileLineByLineUsingForEachLine(fileName: String) {
+    list.add(0)
+    File(fileName).forEachLine { list.add(it.toInt()) }
+}
+fun main(args: Array<String>) {
+    readFileLineByLineUsingForEachLine("src/input.txt")
+    list.sort()
+    println(list)
+    list.forEach {
+        if(it > highest)
+        {
+            highest = it
+        }
+    }
+    highest += 3
+
+    for(i in 0..list.size-2)
+    {
+        if(list[i] + 1 == list[i + 1])
+        {
+            ones++
+            println("from ${list[i]} to ${list[i+1]}: increase by ONE")
+        }
+        else if(list[i] + 3 == list[i + 1])
+        {
+            threes++
+            println("from ${list[i]} to ${list[i+1]}: increase by THREE")
+        }
+    }
+
+    if(list.last() + 1 == highest)
+    {
+        ones++
+    }
+    else if(list.last() + 3 == highest)
+    {
+        threes++
+    }
+    println(highest)
+
+    println("ones = $ones")
+    println("threes = $threes")
+    println("answer: ${ones * threes}")
+}

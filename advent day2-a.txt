@@ -1,0 +1,67 @@
+/**
+ * You can edit, run, and share this code. 
+ * play.kotlinlang.org 
+ */
+
+var passwords: String = ""
+var index = 0
+val regex = "\\d[\\d]?-\\d[\\d]?\\s[a-z]:\\s".toRegex()
+val pRegex = "/.+,".toRegex()
+
+fun main() {    
+    val matches = regex.findAll(passwords)
+    var correct = 0
+    
+    val passwrordList: List<String> = passwords.split(",")
+    passwrordList.forEach { i ->
+        val match = regex.find(i)
+        println(i)
+        var letter = 'a'
+		if (match != null)
+        {
+        	letter = match.value[match.value.length-3]
+        }
+        
+        val firstIndex = match?.range?.max()
+        val lastIndex = match?.range?.max()
+        
+        val fir = firstIndex
+        
+        var remainder = "glerp"
+        
+        if (fir != null)
+        {
+        	remainder = i.substring(fir.toInt(), i.length)
+            //println("${remainder}")
+        }
+        
+        var count = 0
+        for (j in 0..remainder.length-1)
+        {
+            if (remainder[j] == letter)
+            {
+                //println(remainder[j])
+                count++
+            }
+        }
+        //println("${count}")
+        val range = ".*\\d\\d?".toRegex()?.find(i)?.value
+        val min = "\\d\\d?".toRegex()?.find(i)?.value
+        var max: String? = "dull"
+        
+        if (min != null)
+        {
+        	max = range?.substring(min.length+1, range?.length)
+        }
+        println(min)
+        println(max)
+        if (min != null && max != null)
+        {
+            if(count >= min.toInt() && count <= max.toInt())
+            {
+                correct++
+            }
+        }
+    }
+    println("${correct} / ${passwrordList.size}")
+}

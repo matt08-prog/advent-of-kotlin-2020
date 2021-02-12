@@ -1,0 +1,54 @@
+import java.io.File
+
+var list:ArrayList<String> = arrayListOf()
+
+fun readFileLineByLineUsingForEachLine(fileName: String)
+        = File(fileName).forEachLine { list.add(it.toString()) }
+
+fun main(args: Array<String>) {
+    readFileLineByLineUsingForEachLine("src/input.txt")
+    val a = calculateTrees(1,1)
+    println(a)
+    val b = calculateTrees(3,1)
+    println(a)
+    val c =  calculateTrees(5,1)
+    println(a)
+    val d = calculateTrees(7,1)
+    println(a)
+    val e =  calculateTrees(1,2)
+    println(a)
+    println("${a*b*c*d*e}")
+//5007658656
+}
+
+fun calculateTrees(right: Int, down: Int): Long {
+
+    var x = 0
+    var y = 0
+
+    var trees: Long = 0
+    var open = 0
+
+    while(y < list.size)
+    {
+        while (x + right < list[0].length && y + down < list.size) {
+            x += right
+            y += down
+
+            if (list[y][x] == '.') {
+                open++
+            } else {
+                trees++
+            }
+        }
+        if (y + down >= list.size)
+        {
+            println("There are $trees trees hit and $open open spots")
+            break
+        }
+        else {
+            x = (x - list[0].length)
+        }
+    }
+    return trees
+}

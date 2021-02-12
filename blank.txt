@@ -1,0 +1,11 @@
+import java.io.File
+import java.lang.Double.parseDouble
+
+var list:ArrayList<String> = arrayListOf()
+
+fun readFileLineByLineUsingForEachLine(fileName: String) {
+    File(fileName).forEachLine { list.add(it.toString()) }
+}
+fun main(args: Array<String>) {
+    readFileLineByLineUsingForEachLine("src/input.txt")
+}

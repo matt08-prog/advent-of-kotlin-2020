@@ -1,0 +1,22 @@
+import java.io.File
+
+var list:ArrayList<Int>? = arrayListOf()
+
+
+fun readFileLineByLineUsingForEachLine(fileName: String)
+        = File(fileName).forEachLine { list?.add(it.toInt()) }
+
+fun main(args: Array<String>) {
+    readFileLineByLineUsingForEachLine("input.txt")
+
+    for(i in list!!) {
+        for (j in list!!) {
+            for (k in list!!) {
+                if (i + j + k == 2020) {
+                    println(i * j * k)
+                    return
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,68 @@
+import java.io.File
+import java.lang.Double.parseDouble
+import kotlin.reflect.jvm.internal.impl.util.Check
+
+var list:ArrayList<String> = arrayListOf()
+var hasGold = mutableListOf<String>()
+var stubs = mutableListOf<String>()
+var bags = mutableMapOf<String, List<String>>()
+
+fun readFileLineByLineUsingForEachLine(fileName: String) {
+    File(fileName).forEachLine { list.add(it.toString()) }
+}
+fun main(args: Array<String>) {
+    readFileLineByLineUsingForEachLine("src/input.txt")
+    list.forEach {
+        val bag = GetBag(it)
+        var children: MutableList<String> = mutableListOf()
+        val childs = bag[1].split(", ")
+        childs.forEach {
+            children.add(it)
+        }
+        children.forEach {
+            if(it[it.length-1] == 's')
+            {
+                if(it[0] == ' ')
+                {
+                    children[children.indexOf(it)] = it.substring(3,it.length-1)
+                }
+                else
+                {
+                    children[children.indexOf(it)] = it.substring(2,it.length-1)
+                }
+            }
+            else {
+                children[children.indexOf(it)] = it.substring(2, it.length)
+            }
+        }
+
+        bags.put(bag[0], children)
+    }
+    bags.forEach { t, u ->
+        CheckPath(t, u, "shiny gold bag")
+    }
+    //println(stubs)
+    println(hasGold.distinct().size)
+    //229 is correct
+}
+
+fun CheckPath(type: String, children: List<String>?, target: String)
+{
+    children!!.forEach {
+        if(it.indexOf(target) > -1) {
+            hasGold.add(type)
+            bags.forEach { t, u ->
+                if(u.indexOf(type) > -1 ) {
+                    CheckPath(t, u, type)
+                }
+            }
+        }
+    }
+}
+
+fun GetBag(input: String): List<String> {
+    var data: MutableList<String>
+    var type: String = input.substring(0, input.indexOf("contain") - 2)
+    var finalPart: String = input.substring(input.indexOf("contain") +8, input.length-1)
+    return listOf<String>(type, finalPart)
+}

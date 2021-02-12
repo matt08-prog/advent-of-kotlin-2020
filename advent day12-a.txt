@@ -1,0 +1,62 @@
+import java.io.File
+import java.lang.Double.parseDouble
+import kotlin.math.abs
+
+var list:ArrayList<String> = arrayListOf()
+
+fun readFileLineByLineUsingForEachLine(fileName: String) {
+    File(fileName).forEachLine { list.add(it.toString()) }
+}
+fun main(args: Array<String>) {
+    readFileLineByLineUsingForEachLine("src/input.txt")
+    list.forEach {
+        if (it[0] == 'R' || it[0] == 'L')
+            ferry.rotate(it[0], it.substring(1, it.length).toInt())
+        else
+            ferry.Move(it[0], it.substring(1, it.length).toInt())
+        println("${ferry.ew}, ${ferry.ns}, dir: ${ferry.angle}                     -> $it")
+    }
+    println("answer: ${abs(ferry.ew) + abs(ferry.ns)}")
+}
+
+object ferry {
+    var ew = 0
+    var ns = 0
+    var angle = 1
+
+    open fun Move (Dir: Char, Dist: Int){
+        when(Dir) {
+            'N' -> ns += Dist
+            'S' -> ns -= Dist
+            'E' -> ew += Dist
+            'W' -> ew -= Dist
+            'F' -> {
+                when(angle) {
+                    0 -> ns += Dist
+                    1 -> ew += Dist
+                    2 -> ns -= Dist
+                    3 -> ew -= Dist
+                }
+            }
+        }
+        //println("$dir: $dist")
+    }
+
+    open fun rotate (Dir: Char, Angle: Int){
+        if (Dir == 'R')
+            angle += Angle / 90
+        else
+            angle -= Angle / 90
+        if  (angle > 3)
+        {
+            angle -= 4
+        }
+        if (angle < 0)
+        {
+            angle += 4
+        }
+        //println("$Dir: $angle")
+    }
+}
+
+//1589 is answer
